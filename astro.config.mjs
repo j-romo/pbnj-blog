@@ -5,8 +5,8 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://j-romo.github.io',
-	//site: 'https://www.peanutbutterandjelly.ai',
-	base: '/pbnj-blog',
+	//site: 'https://j-romo.github.io',
+	site: 'https://peanutbutterandjelly.ai',
+	//base: '/pbnj-blog',
 	integrations: [mdx(), sitemap()],
 });
