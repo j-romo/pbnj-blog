@@ -5,5 +5,5 @@ export default defineCliConfig({
     projectId: '69ah3koy',
     dataset: 'production'
   },
-  studioHost: 'https://peanutbutterandjelly.ai/admin',
+  studioHost: 'pbnj-blog-cms'
 })
