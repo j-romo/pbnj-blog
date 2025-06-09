@@ -9,8 +9,8 @@ import resolveProductionUrl from './src/lib/presentation/resolve-production-url'
 export default defineConfig({
   name: 'default',
   title: 'PB&J Blog',
-  projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID,
-  dataset: import.meta.env.PUBLIC_SANITY_DATASET,
+  projectId: '69ah3koy',
+  dataset: 'production',
   plugins: [
     structureTool(),
     // presentationTool({
@@ -25,9 +25,5 @@ export default defineConfig({
     // }),
   ],
   schema,
-  cors: {
-    credentials: true,
-    origin: ['http://localhost:4321', 'https://peanutbutterandjelly.ai']
-  }
 });
 
