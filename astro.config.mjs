@@ -21,8 +21,8 @@ export default defineConfig({
         // Only include Sanity studio in development
         ...(process.env.NODE_ENV === 'development' ? [
             sanity({
-              projectId: PUBLIC_SANITY_PROJECT_ID || '69ah3koy',
-              dataset: PUBLIC_SANITY_DATASET || 'production',
+              projectId: '69ah3koy',
+              dataset: 'production',
               useCdn: true, 
               apiVersion: "2023-05-03", 
               studioBasePath: '/studio',
