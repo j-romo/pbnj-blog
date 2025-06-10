@@ -24,7 +24,7 @@ export default defineConfig({
               projectId: '69ah3koy',
               dataset: 'production',
               useCdn: true, 
-              apiVersion: "2023-05-03", 
+              apiVersion: "2024-01-01", 
               studioBasePath: '/studio',
             })
         ] : []),
