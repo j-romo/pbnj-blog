@@ -22,7 +22,7 @@ export async function getStaticPaths() {
       "slug": slug.current,
       title,
       body,
-      heroImage,
+      "heroImage": heroImage.asset->url,
       _createdAt,
       _updatedAt
     }
@@ -48,16 +48,15 @@ const post: SanityPost = Astro.props;
         margin: 0;
       }
       .hero-image {
-        width: 100vw;
-        object-fit: cover;
-        object-position: center;
-        margin-left: 50%;
-        transform: translateX(-50%);
+        max-width: 720px; /* Set a maximum width for the image */
+        margin: 0 auto; /* Center the image horizontally */
+        padding: 1rem 0; /* Add spacing above and below */
       }
       .hero-image img {
         width: 100%;
         height: auto;
-        display: block;
+        border-radius: 8px; /* Optional: Add rounded corners */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
       }
       .prose {
         width: 720px;
@@ -146,11 +145,20 @@ const post: SanityPost = Astro.props;
                   const text = block.children
                     ?.map((child: any) => child.text)
                     .join('') || '';
-                  
                   return text.trim() ? <p>{text}</p> : null;
                 }
-                // Add more block type handlers here as needed
-                return null;
+                // Add more block type handlers here as needed (e.g., images, code blocks, etc.)
+                if (block._type === 'image') {
+					return (
+					<img
+						src={block.asset.url}
+						alt={block.alt || ''}
+						style="max-width: 100%; margin: 1rem 0;"
+					/>
+					);
+				}
+				// If block type is unrecognized,
+				return null;
               })
             ) : (
               <p>No content available.</p>

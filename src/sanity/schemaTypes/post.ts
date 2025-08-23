@@ -31,6 +31,9 @@ export const postType = defineType({
       name: 'heroImage',
       title: 'Hero Image',
       type: 'image',
+      options: {
+        hotspot: true, // Enable cropping in Sanity Studio
+      },
     }),
     defineField({
       name: "categories",
@@ -55,7 +58,7 @@ export const postType = defineType({
     select: {
       title: "title",
       author: "author.name",
-      media: "mainImage",
+      media: "heroImage",
     },
     prepare(selection) {
       const { author } = selection;
