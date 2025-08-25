@@ -13,14 +13,14 @@
     "@astrojs/react": "^4.3.0",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.1",
-    "@astrojs/vercel": "^8.1.5",
+    "@astrojs/vercel": "^8.0.4",
     "@portabletext/react": "^3.2.1",
     "@portabletext/types": "^2.0.13",
-    "@sanity/astro": "^3.2.6",
-    "@sanity/cli": "^3.91.0",
-    "@sanity/client": "^6.29.1",
+    "@sanity/astro": "^3.2.0",
+    "@sanity/cli": "^3.88.0",
+    "@sanity/client": "^7.9.0",
     "@sanity/image-url": "^1.1.0",
-    "@sanity/visual-editing": "^2.13.18",
+    "@sanity/visual-editing": "^3.0.3",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.2",
     "astro": "^5.9.1",
@@ -28,7 +28,10 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-is": "^19.1.0",
-    "sanity": "^3.91.0",
+    "sanity": "^4.5.0",
     "styled-components": "^6.1.17"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
   }
 }
