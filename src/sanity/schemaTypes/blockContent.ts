@@ -83,7 +83,6 @@ export const blockContentType = defineType({
           type: "string",
           title: "Caption",
           description: "Shown below the image (optional)",
-          options: { isHighlighted: true },
         },
         {
           name: "attribution",
