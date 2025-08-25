@@ -31,7 +31,10 @@ export const blockContentType = defineType({
         { title: "H4", value: "h4" },
         { title: "Quote", value: "blockquote" },
       ],
-      lists: [{ title: "Bullet", value: "bullet" }],
+      lists: [
+        { title: "Bullet", value: "bullet" },
+        { title: "Numbered", value: "number" },
+      ],
       // Marks let you mark up inline text in the Portable Text Editor
       marks: {
         // Decorators usually describe a single property – e.g. a typographic
@@ -39,6 +42,7 @@ export const blockContentType = defineType({
         decorators: [
           { title: "Strong", value: "strong" },
           { title: "Emphasis", value: "em" },
+          { title: "Code", value: "code" },
         ],
         // Annotations can be any object structure – e.g. a link or a footnote.
         annotations: [
@@ -51,6 +55,7 @@ export const blockContentType = defineType({
                 title: "URL",
                 name: "href",
                 type: "url",
+                validation: (Rule) => Rule.uri({ scheme: ["http", "https", "mailto"] }),
               },
             ],
           },
@@ -62,14 +67,59 @@ export const blockContentType = defineType({
     // as a block type.
     defineArrayMember({
       type: "image",
+      name: "inlineImage",
+      title: "Image",
       options: { hotspot: true },
       fields: [
         {
           name: "alt",
           type: "string",
-          title: "Alternative Text",
+          title: "Alt Text",
+          description: "Describe the image for screen readers.",
+          validation: (Rule) => Rule.max(140),
+        },
+        {
+          name: "caption",
+          type: "string",
+          title: "Caption",
+          description: "Shown below the image (optional)",
+          options: { isHighlighted: true },
+        },
+        {
+          name: "attribution",
+          type: "string",
+          title: "Attribution",
+          description: "Credit / source (optional)",
+        },
+         {
+          name: "alignment",
+          type: "string",
+          title: "Alignment",
+          initialValue: "center",
+          options: {
+            list: [
+              { title: "Left", value: "left" },
+              { title: "Center", value: "center" },
+              { title: "Right", value: "right" },
+              { title: "Wide", value: "wide" },
+              { title: "Full", value: "full" },
+            ],
+            layout: "radio",
+            direction: "horizontal",
+          },
         },
       ],
+      preview: {
+        select: {
+          title: "caption",
+          media: "asset",
+          subtitle: "alt",
+        },
+      },
+    }),
+    // Optional richer figure object (see figure.ts)
+    defineArrayMember({
+      type: "figure",
     }),
   ],
 });
