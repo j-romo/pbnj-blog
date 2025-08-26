@@ -144,19 +144,6 @@ const post: SanityPost = Astro.props;
             </div>
             <h1>{post.title}</h1>
           </div>
-          
-          <!-- Add this temporarily right before your PortableText component -->
-          <details>
-            <summary>Debug Post Structure</summary>
-            <pre style="font-size: 11px; overflow: auto; max-height: 300px;">
-              {JSON.stringify({
-                bodyType: typeof post.body,
-                bodyLength: post.body?.length,
-                firstItem: post.body?.[0],
-                hasImageItems: post.body?.some(item => item._type === 'image')
-              }, null, 2)}
-            </pre>
-          </details>
 
           <!-- Post Body -->
           <div class="content">
