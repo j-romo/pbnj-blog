@@ -11,4 +11,5 @@ export default defineConfig({
     dataset: 'production',
   },
   schema,
+  studioHost: 'pbnj-blog-cms',
 })

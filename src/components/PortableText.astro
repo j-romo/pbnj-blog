@@ -1,15 +1,50 @@
 ---
 // ./src/components/PortableText.astro
-import { PortableText as PortableTextInternal } from 'astro-portabletext'
-import PortableTextImage from "./PortableTextImage.astro";
+import { PortableText as PortableTextComponent } from 'astro-portabletext';
+import PortableTextImage from './PortableTextImage.astro';
 
-const { portableText } = Astro.props;
+const { value } = Astro.props;
 
 const components = {
   type: {
     image: PortableTextImage,
-  }
+  },
 };
 ---
 
-<PortableTextInternal value={portableText} components={components} />
+<PortableTextComponent value={value} components={components} />
+
+<style>
+  :global(figure.image) {
+    margin: 2rem 0;
+  }
+  
+  :global(figure.image.center) {
+    text-align: center;
+  }
+  
+  :global(figure.image.left) {
+    float: left;
+    margin-right: 2rem;
+    max-width: 50%;
+  }
+  
+  :global(figure.image.right) {
+    float: right;
+    margin-left: 2rem;
+    max-width: 50%;
+  }
+  
+  :global(figure.image img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  
+  :global(figure.image figcaption) {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+</style>

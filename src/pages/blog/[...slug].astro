@@ -5,6 +5,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { sanityClient } from '../../lib/sanityClient';
+import PortableText from '../../components/PortableText.astro';
 
 // Define the post type for better TypeScript support
 interface SanityPost {
@@ -21,7 +22,16 @@ export async function getStaticPaths() {
     *[_type == "post"] {
       "slug": slug.current,
       title,
-      body,
+      body[] {
+        ...,
+        _type == "image" => {
+          ...,
+          "asset": asset->{
+            _id,
+            url
+          }
+        }
+      },
       "heroImage": heroImage.asset->url,
       _createdAt,
       _updatedAt
@@ -135,31 +145,23 @@ const post: SanityPost = Astro.props;
             <h1>{post.title}</h1>
           </div>
           
+          <!-- Add this temporarily right before your PortableText component -->
+          <details>
+            <summary>Debug Post Structure</summary>
+            <pre style="font-size: 11px; overflow: auto; max-height: 300px;">
+              {JSON.stringify({
+                bodyType: typeof post.body,
+                bodyLength: post.body?.length,
+                firstItem: post.body?.[0],
+                hasImageItems: post.body?.some(item => item._type === 'image')
+              }, null, 2)}
+            </pre>
+          </details>
+
           <!-- Post Body -->
           <div class="content">
             {post.body && post.body.length > 0 ? (
-              post.body.map((block: any) => {
-                // Handle different block types
-                if (block._type === 'block') {
-                  // Regular text blocks
-                  const text = block.children
-                    ?.map((child: any) => child.text)
-                    .join('') || '';
-                  return text.trim() ? <p>{text}</p> : null;
-                }
-                // Add more block type handlers here as needed (e.g., images, code blocks, etc.)
-                if (block._type === 'image') {
-					return (
-					<img
-						src={block.asset.url}
-						alt={block.alt || ''}
-						style="max-width: 100%; margin: 1rem 0;"
-					/>
-					);
-				}
-				// If block type is unrecognized,
-				return null;
-              })
+              <PortableText value={post.body} />
             ) : (
               <p>No content available.</p>
             )}

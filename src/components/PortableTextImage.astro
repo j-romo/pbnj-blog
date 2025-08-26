@@ -2,13 +2,63 @@
 // ./src/components/PortableTextImage.astro
 import { urlForImage } from "../sanity/lib/url-for-image";
 
-const { asset, alt } = Astro.props.node;
+// The image data is in node, not value
+const { node, isInline } = Astro.props;
 
-const url = urlForImage(asset).url();
-const webpUrl = urlForImage(asset).format("webp").url();
+if (!node || !node.asset) {
+  console.error("PortableTextImage missing asset:", Astro.props);
+  return "";
+}
+
+// Extract properties from node
+const { asset, alt, caption, alignment = 'center' } = node;
+
+// Get the image URL - node.asset already has a URL
+const url = asset.url || urlForImage(asset).url();
 ---
 
-<picture>
-  <source srcset={webpUrl} type="image/webp" />
-  <img class="responsive__img" src={url} alt={alt} />
-</picture>
+<figure class={`image ${alignment}`}>
+  <img 
+    src={url} 
+    alt={alt || ''} 
+    class={`responsive__img ${isInline ? 'inline' : 'block'}`}
+    loading="lazy" 
+  />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  figure.image {
+    margin: 2rem 0;
+  }
+  
+  figure.image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  
+  figure.image figcaption {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+  
+  .image.center {
+    text-align: center;
+  }
+  
+  .image.left {
+    float: left;
+    margin-right: 2rem;
+    max-width: 50%;
+  }
+  
+  .image.right {
+    float: right;
+    margin-left: 2rem;
+    max-width: 50%;
+  }
+</style>
+
