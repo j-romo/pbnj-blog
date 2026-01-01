@@ -51,9 +51,10 @@ export const postType = defineType({
       title: 'Body',
       type: 'array',
       of: [
-    { type: 'block' },      // for rich text
-    { type: 'image', options: { hotspot: true } } // for images
-  ],
+        { type: 'block' },      // for rich text
+        { type: 'image', options: { hotspot: true } }, // for images
+        { type: 'table' },      // for tables
+      ],
     }),
   ],
 
