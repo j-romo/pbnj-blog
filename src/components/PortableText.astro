@@ -2,12 +2,14 @@
 // ./src/components/PortableText.astro
 import { PortableText as PortableTextComponent } from 'astro-portabletext';
 import PortableTextImage from './PortableTextImage.astro';
+import PortableTextTable from './PortableTextTable.astro';
 
 const { value } = Astro.props;
 
 const components = {
   type: {
     image: PortableTextImage,
+    table: PortableTextTable,
   },
 };
 ---
