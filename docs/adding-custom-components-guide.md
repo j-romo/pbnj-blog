@@ -11,6 +11,7 @@ Our blog uses:
 - **Astro** for the frontend (static site generator)
 - **Sanity Studio** for content management
 - **Portable Text** for rich text content rendering
+- **GitHub Pages** for deployment 
 
 ### Key Files Structure
 
@@ -265,7 +266,7 @@ Success! Studio deployed to https://your-studio-name.sanity.studio/
 Your blog has **two separate applications**:
 
 1. **Astro Website** (Frontend)
-   - Hosted on: GitHub Pages / Vercel / Netlify
+   - Hosted on: GitHub Pages
    - Built from: Your Astro source code
    - Deployed when: You push to GitHub (via GitHub Actions)
    - URL: `https://peanutbutterandjelly.ai`
