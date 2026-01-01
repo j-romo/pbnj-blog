@@ -239,6 +239,100 @@ npx sanity dev
    - Navigate to the post
    - Verify the component renders correctly
 
+### Step 8: Deploy the Sanity Studio (CRITICAL!)
+
+**This is a separate deployment from your Astro site!**
+
+Once you've confirmed everything works locally, you MUST deploy the Sanity Studio separately:
+
+```bash
+# Build the studio
+npx sanity build
+
+# Deploy to Sanity's hosting
+npx sanity deploy dist
+```
+
+When prompted "dist is not empty, do you want to proceed?", type `y` and press Enter.
+
+**Success message:**
+```
+Success! Studio deployed to https://your-studio-name.sanity.studio/
+```
+
+#### Why Separate Deployment?
+
+Your blog has **two separate applications**:
+
+1. **Astro Website** (Frontend)
+   - Hosted on: GitHub Pages / Vercel / Netlify
+   - Built from: Your Astro source code
+   - Deployed when: You push to GitHub (via GitHub Actions)
+   - URL: `https://peanutbutterandjelly.ai`
+
+2. **Sanity Studio** (CMS/Admin Interface)
+   - Hosted on: Sanity's cloud hosting
+   - Built from: Your Sanity schema files
+   - Deployed when: You run `npx sanity deploy`
+   - URL: `https://your-project.sanity.studio`
+
+**The Astro site READS data from Sanity via API, but the Studio interface itself is a separate React app that must be deployed independently.**
+
+#### Deployment Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│                   Your Workflow                      │
+├─────────────────────────────────────────────────────┤
+│                                                      │
+│  1. Change schema files (add table component)       │
+│     └─> src/sanity/schemaTypes/                     │
+│                                                      │
+│  2. Test locally                                     │
+│     └─> npx sanity dev (Studio at localhost:3333)   │
+│     └─> npm run dev (Site at localhost:4321)        │
+│                                                      │
+│  3. Commit and push to GitHub                        │
+│     └─> git commit & git push                        │
+│     └─> Triggers Astro build via GitHub Actions     │
+│     └─> Astro site updates (can read new data)      │
+│                                                      │
+│  4. Deploy Sanity Studio separately! ⚠️             │
+│     └─> npx sanity build                            │
+│     └─> npx sanity deploy dist                      │
+│     └─> Studio UI updates (can create new data)     │
+│                                                      │
+└─────────────────────────────────────────────────────┘
+```
+
+#### Common Deployment Issues
+
+**Problem:** "Table component works locally but not in production Studio"
+- **Cause:** You deployed the Astro site but forgot to deploy the Studio
+- **Solution:** Run `npx sanity build && npx sanity deploy dist`
+
+**Problem:** "Error: sanity.cli.js does not contain a project identifier"
+- **Cause:** Missing or incorrectly formatted CLI config file
+- **Solution:** Create `sanity.cli.ts`:
+  ```typescript
+  import { defineCliConfig } from 'sanity/cli';
+  
+  export default defineCliConfig({
+    api: {
+      projectId: 'your-project-id',
+      dataset: 'production'
+    },
+    studioHost: 'your-studio-name'
+  });
+  ```
+
+**Problem:** "Failed to resolve sanity.config.(js|ts)"
+- **Cause:** This is often a warning, not a fatal error
+- **Solution:** Check if deployment still succeeded. If not, ensure `sanity.config.mjs` exists with proper structure
+
+**Problem:** Not logged in to Sanity CLI
+- **Solution:** Run `npx sanity login` before deploying
+
 ## Common Pitfalls & Solutions
 
 ### Problem: Component doesn't appear in Sanity Studio
@@ -286,6 +380,8 @@ When adding a new component:
 □ Test in Studio (add content)
 □ Test in Astro (view rendered output)
 □ Commit changes
+□ Deploy Sanity Studio (npx sanity build && npx sanity deploy dist)
+□ Verify on live studio site
 ```
 
 ## Example: Adding a Callout/Alert Component
