@@ -12,16 +12,16 @@ This project uses **two separate applications** that work together:
 ### 1. Frontend Application (Astro)
 - **Framework:** Astro v5.13.3 (Static Site Generator)
 - **Hosting:** GitHub Pages
-- **Deployment:** Automatic via GitHub Actions on push to \`main\`
+- **Deployment:** Automatic via GitHub Actions on push to `main`
 - **Purpose:** Public-facing blog website
-- **URL:** \`https://peanutbutterandjelly.ai\`
+- **URL:** `https://peanutbutterandjelly.ai`
 
 ### 2. CMS Application (Sanity Studio)
 - **Framework:** Sanity Studio v4.5.0 (React-based admin interface)
 - **Hosting:** Sanity Cloud
-- **Deployment:** Manual via Sanity CLI (\`npx sanity deploy\`)
+- **Deployment:** Manual via Sanity CLI (`npx sanity deploy`)
 - **Purpose:** Content management and editing interface
-- **URL:** \`https://pbnj-blog-cms.sanity.studio\`
+- **URL:** `https://pbnj-blog-cms.sanity.studio`
 
 ```
 ┌─────────────────────────────────────────────────┐
