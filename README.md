@@ -1,41 +1,91 @@
-# Astro Starter Kit: Blog
+# Peanut Butter and Jelly Blog
 
-```sh
-npm create astro@latest -- --template blog
+A modern blog powered by Astro and Sanity CMS with custom component support.
+
+**Live Site:** [peanutbutterandjelly.ai](https://peanutbutterandjelly.ai)  
+**CMS:** [pbnj-blog-cms.sanity.studio](https://pbnj-blog-cms.sanity.studio)
+
+## Architecture Overview
+
+This project uses **two separate applications** that work together:
+
+### 1. Frontend Application (Astro)
+- **Framework:** Astro v5.13.3 (Static Site Generator)
+- **Hosting:** GitHub Pages
+- **Deployment:** Automatic via GitHub Actions on push to \`main\`
+- **Purpose:** Public-facing blog website
+- **URL:** \`https://peanutbutterandjelly.ai\`
+
+### 2. CMS Application (Sanity Studio)
+- **Framework:** Sanity Studio v4.5.0 (React-based admin interface)
+- **Hosting:** Sanity Cloud
+- **Deployment:** Manual via Sanity CLI (\`npx sanity deploy\`)
+- **Purpose:** Content management and editing interface
+- **URL:** \`https://pbnj-blog-cms.sanity.studio\`
+
 ```
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+┌─────────────────────────────────────────────────┐
+│              Content Workflow                   │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  1. Create/Edit Content                         │
+│     └─> Sanity Studio (pbnj-blog-cms)           │
+│                                                 │
+│  2. Content Saved to Sanity Cloud               │
+│     └─> Sanity API (Dataset: production)        │
+│                                                 │
+│  3. Astro Site Fetches Content                  │
+│     └─> Build time via Sanity Client            │
+│                                                 │
+│  4. Static Site Generated                       │
+│     └─> GitHub Actions builds & deploys         │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
 
 ## 🚀 Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
-
 ```text
-├── public/
+pbnj-blog/
+├── public/                          # Static assets
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── components/
+│   │   ├── PortableText.astro       # Main Portable Text renderer
+│   │   ├── PortableTextImage.astro  # Image block renderer
+│   │   ├── PortableTextTable.astro  # Table block renderer
+│   │   └── ...
+│   ├── sanity/
+│   │   ├── schemaTypes/
+│   │   │   ├── index.ts             # Schema registry
+│   │   │   ├── post.ts              # Blog post schema
+│   │   │   └── objects/
+│   │   │       ├── figure.ts        # Figure component schema
+│   │   │       └── table.ts         # Table component schema
+│   │   └── lib/
+│   ├── lib/
+│   │   └── sanityClient.ts          # Sanity API client
+│   ├── pages/
+│   │   ├── blog/
+│   │   │   ├── index.astro          # Blog listing (from Sanity)
+│   │   │   └── [...slug].astro      # Blog post pages (from Sanity)
+│   │   └── index.astro
+│   └── layouts/
+├── sanity.config.mjs                # Sanity Studio configuration
+├── sanity.cli.ts                    # Sanity CLI configuration
+└── astro.config.mjs                 # Astro configuration
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
+**Key Points:**
+- Blog content comes from **Sanity CMS**, not local markdown files
+- Custom components are defined in \`src/sanity/schemaTypes/objects/\`
+- Portable Text renderers in \`src/components/\` handle component display
+- Static site is built from Sanity content at build time
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+### Astro (Frontend) Commands
+
+All commands are run from the root of the project:
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
@@ -44,8 +94,65 @@ All commands are run from the root of the project, from a terminal:
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+### Sanity Studio (CMS) Commands
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npx sanity dev`          | Start Sanity Studio locally at `localhost:3333` |
+| `npx sanity build`        | Build Sanity Studio for production              |
+| `npx sanity deploy dist`  | Deploy Studio to Sanity Cloud                   |
+| `npx sanity login`        | Log in to Sanity CLI                            |
+
+### Development Workflow
+
+**For local development:**
+```bash
+# Terminal 1 - Astro frontend
+npm run dev
+
+# Terminal 2 - Sanity Studio
+npx sanity dev
+```
+
+**For production deployment:**
+```bash
+# 1. Commit and push code changes
+git add .
+git commit -m "Your changes"
+git push origin main
+
+# GitHub Actions automatically deploys Astro site ✅
+
+# 2. Deploy Sanity Studio separately (only if schema changed, adding new components like table, image)
+npx sanity build
+npx sanity deploy dist
+```
+
+## 🎨 Custom Components
+
+This blog supports custom block-level components in blog posts:
+
+- ✅ **Images** with hotspot cropping
+- ✅ **Figures** with captions and attribution
+- ✅ **Tables** with headers and styling
+
+To add new custom components, see the guides in the \`/docs\` folder (on feature branch).
+
+## 📚 Resources
+
+- [Astro Documentation](https://docs.astro.build)
+- [Sanity Documentation](https://www.sanity.io/docs)
+- [Portable Text Specification](https://github.com/portabletext/portabletext)
+
+## 🔧 Configuration
+
+**Sanity Project:**
+- Project ID: `69ah3koy`
+- Dataset: `production`
+- Studio Host: `pbnj-blog-cms`
+
+**Environment:**
+- Node.js v18+ required
+- TypeScript enabled
+- ESM modules
