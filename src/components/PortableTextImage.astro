@@ -11,13 +11,13 @@ if (!node || !node.asset) {
 }
 
 // Extract properties from node
-const { asset, alt, caption, alignment = 'center' } = node;
+const { asset, alt, caption, alignment = 'center', size = 'medium' } = node;
 
 // Get the image URL - node.asset already has a URL
 const url = asset.url || urlForImage(asset).url();
 ---
 
-<figure class={`image ${alignment}`}>
+<figure class={`image ${alignment} ${size}`}>
   <img 
     src={url} 
     alt={alt || ''} 
@@ -45,20 +45,57 @@ const url = asset.url || urlForImage(asset).url();
     text-align: center;
   }
   
+  /* Alignment */
   .image.center {
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .image.left {
     float: left;
     margin-right: 2rem;
-    max-width: 50%;
+    margin-left: 0;
   }
   
   .image.right {
     float: right;
     margin-left: 2rem;
-    max-width: 50%;
+    margin-right: 0;
+  }
+
+  /* Size controls */
+  .image.small {
+    max-width: 40%;
+  }
+
+  .image.medium {
+    max-width: 70%;
+  }
+
+  .image.large {
+    max-width: 100%;
+  }
+
+  /* Adjust float widths for smaller sizes */
+  .image.left.small,
+  .image.right.small {
+    max-width: 40%;
+  }
+
+  .image.left.medium,
+  .image.right.medium {
+    max-width: 55%;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .image.left,
+    .image.right {
+      float: none;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 </style>
-
