@@ -26,6 +26,7 @@ const url = asset.url || urlForImage(asset).url();
   />
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
+{(alignment === 'left' || alignment === 'right') && <div class="clearfix"></div>}
 
 <style>
   figure.image {
@@ -97,5 +98,13 @@ const url = asset.url || urlForImage(asset).url();
       margin-left: auto;
       margin-right: auto;
     }
+  }
+
+  /* Clearfix for floated images */
+  .clearfix {
+    clear: both;
+    height: 0;
+    margin: 0;
+    padding: 0;
   }
 </style>
