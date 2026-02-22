@@ -1,0 +1,171 @@
+---
+import { PortableText } from 'astro-portabletext';
+
+const { node } = Astro.props;
+
+if (!node || !node.items) {
+  console.error("PortableTextAccordion missing items:", Astro.props);
+  return null;
+}
+
+const { items, allowMultipleOpen = false } = node;
+const accordionId = `accordion-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="accordion" data-allow-multiple={allowMultipleOpen.toString()} data-accordion-id={accordionId}>
+  {items.map((item: any, index: number) => {
+    const itemId = `${accordionId}-item-${index}`;
+    const isDefaultOpen = item.defaultOpen || false;
+    
+    return (
+      <div class={`accordion-item ${isDefaultOpen ? 'is-open' : ''}`} data-item-id={itemId}>
+        <button 
+          class="accordion-header" 
+          aria-expanded={isDefaultOpen.toString()}
+          aria-controls={`${itemId}-content`}
+        >
+          <span class="accordion-title">{item.title}</span>
+          <span class="accordion-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+        <div 
+          class="accordion-content" 
+          id={`${itemId}-content`}
+          aria-hidden={!isDefaultOpen}
+        >
+          <div class="accordion-body">
+            <PortableText value={item.content} />
+          </div>
+        </div>
+      </div>
+    );
+  })}
+</div>
+
+<style>
+  .accordion {
+    margin: 2rem 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .accordion-item:last-child {
+    border-bottom: none;
+  }
+
+  .accordion-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    transition: background-color 0.2s ease;
+  }
+
+  .accordion-header:hover {
+    background: #f9fafb;
+  }
+
+  .accordion-header:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
+  }
+
+  .accordion-title {
+    flex: 1;
+    color: #111827;
+  }
+
+  .accordion-icon {
+    display: flex;
+    align-items: center;
+    color: #6b7280;
+    transition: transform 0.2s ease;
+  }
+
+  .accordion-item.is-open .accordion-icon {
+    transform: rotate(180deg);
+  }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .accordion-item.is-open .accordion-content {
+    max-height: 2000px; /* Large enough for most content */
+  }
+
+  .accordion-body {
+    padding: 0 1.25rem 1.25rem 1.25rem;
+    color: #4b5563;
+  }
+
+  .accordion-body :global(p) {
+    margin: 0.5rem 0;
+  }
+
+  .accordion-body :global(p:first-child) {
+    margin-top: 0;
+  }
+
+  .accordion-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>
+
+<script>
+  // Handle accordion interactions
+  document.addEventListener('DOMContentLoaded', () => {
+    const accordions = document.querySelectorAll('.accordion');
+    
+    accordions.forEach((accordion) => {
+      const allowMultiple = accordion.getAttribute('data-allow-multiple') === 'true';
+      const headers = accordion.querySelectorAll('.accordion-header');
+      
+      headers.forEach((header) => {
+        header.addEventListener('click', () => {
+          const item = header.closest('.accordion-item');
+          const isOpen = item?.classList.contains('is-open');
+          
+          // If not allowing multiple, close all others
+          if (!allowMultiple) {
+            accordion.querySelectorAll('.accordion-item').forEach((otherItem) => {
+              if (otherItem !== item) {
+                otherItem.classList.remove('is-open');
+                const otherHeader = otherItem.querySelector('.accordion-header');
+                otherHeader?.setAttribute('aria-expanded', 'false');
+                const otherContent = otherItem.querySelector('.accordion-content');
+                otherContent?.setAttribute('aria-hidden', 'true');
+              }
+            });
+          }
+          
+          // Toggle current item
+          if (item) {
+            item.classList.toggle('is-open');
+            const newIsOpen = !isOpen;
+            header.setAttribute('aria-expanded', newIsOpen.toString());
+            const content = item.querySelector('.accordion-content');
+            content?.setAttribute('aria-hidden', (!newIsOpen).toString());
+          }
+        });
+      });
+    });
+  });
+</script>

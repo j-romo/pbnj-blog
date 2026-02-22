@@ -54,6 +54,9 @@ export const postType = defineType({
         { type: 'block' },      // for rich text
         { type: 'image', options: { hotspot: true } }, // for images
         { type: 'table' },      // for tables
+        { type: 'divider' },    // for dividers
+        { type: 'accordion' },  // for accordions
+        { type: 'codeBlock' },  // for code blocks
       ],
     }),
   ],

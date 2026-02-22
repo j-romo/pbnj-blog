@@ -1,0 +1,87 @@
+---
+const { node } = Astro.props;
+
+if (!node) {
+  console.error("PortableTextDivider missing node:", Astro.props);
+  return null;
+}
+
+const { style = 'solid', spacing = 'medium' } = node;
+
+// Map spacing to CSS values
+const spacingMap = {
+  small: '1.5rem',
+  medium: '3rem',
+  large: '4.5rem',
+};
+
+const spacingValue = spacingMap[spacing as keyof typeof spacingMap] || spacingMap.medium;
+---
+
+<div class={`divider divider-${style} divider-spacing-${spacing}`} style={`margin: ${spacingValue} auto;`}>
+  {style === 'dots' && <span class="divider-content">•••</span>}
+  {style === 'stars' && <span class="divider-content">✦ ✦ ✦</span>}
+  {style === 'wave' && <span class="divider-content">🌊</span>}
+</div>
+
+<style>
+  .divider {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    position: relative;
+  }
+
+  /* Solid line */
+  .divider-solid::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ccc 20%, #ccc 80%, transparent);
+  }
+
+  /* Dashed line */
+  .divider-dashed::before {
+    content: '';
+    display: block;
+    height: 0;
+    border-top: 1px dashed #ccc;
+  }
+
+  /* Dotted line */
+  .divider-dotted::before {
+    content: '';
+    display: block;
+    height: 0;
+    border-top: 2px dotted #ccc;
+  }
+
+  /* Content-based dividers */
+  .divider-content {
+    display: block;
+    color: #999;
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+  }
+
+  .divider-dots .divider-content,
+  .divider-stars .divider-content {
+    letter-spacing: 1rem;
+  }
+
+  .divider-wave .divider-content {
+    font-size: 2rem;
+    letter-spacing: 0.25rem;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .divider {
+      max-width: 150px;
+    }
+    
+    .divider-content {
+      font-size: 1.25rem;
+    }
+  }
+</style>

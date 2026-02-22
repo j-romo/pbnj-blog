@@ -3,6 +3,9 @@
 import { PortableText as PortableTextComponent } from 'astro-portabletext';
 import PortableTextImage from './PortableTextImage.astro';
 import PortableTextTable from './PortableTextTable.astro';
+import PortableTextDivider from './PortableTextDivider.astro';
+import PortableTextAccordion from './PortableTextAccordion.astro';
+import PortableTextCodeBlock from './PortableTextCodeBlock.astro';
 
 const { value } = Astro.props;
 
@@ -10,6 +13,9 @@ const components = {
   type: {
     image: PortableTextImage,
     table: PortableTextTable,
+    divider: PortableTextDivider,
+    accordion: PortableTextAccordion,
+    codeBlock: PortableTextCodeBlock,
   },
 };
 ---

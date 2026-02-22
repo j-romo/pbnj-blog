@@ -1,0 +1,283 @@
+---
+const { node } = Astro.props;
+
+if (!node || !node.code) {
+  console.error("PortableTextCodeBlock missing code:", Astro.props);
+  return null;
+}
+
+const { 
+  code, 
+  language = 'javascript', 
+  filename, 
+  highlightLines = [], 
+  showLineNumbers = true 
+} = node;
+
+// Split code into lines for rendering
+const lines = code.split('\n');
+
+// Helper function to check if a line should be highlighted
+const isHighlighted = (lineNumber: number) => highlightLines.includes(lineNumber);
+---
+
+<div class="code-block-wrapper">
+  {filename && (
+    <div class="code-block-header">
+      <span class="code-block-filename">{filename}</span>
+      <span class="code-block-language">{language}</span>
+    </div>
+  )}
+  <div class="code-block">
+    <pre class={`language-${language}`}><code>{lines.map((line: string, index: number) => {
+      const lineNumber = index + 1;
+      const highlighted = isHighlighted(lineNumber);
+      return (
+        <div class={`code-line ${highlighted ? 'highlighted' : ''}`}>
+          {showLineNumbers && (
+            <span class="line-number" aria-hidden="true">{lineNumber}</span>
+          )}
+          <span class="line-content">{line || ' '}</span>
+        </div>
+      );
+    })}</code></pre>
+    <button class="copy-button" aria-label="Copy code to clipboard">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.75 4.75H10.25M5.75 7.75H10.25M5.75 10.75H8.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M4 1.75H12C12.6904 1.75 13.25 2.30964 13.25 3V13C13.25 13.6904 12.6904 14.25 12 14.25H4C3.30964 14.25 2.75 13.6904 2.75 13V3C2.75 2.30964 3.30964 1.75 4 1.75Z" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <span class="copy-text">Copy</span>
+    </button>
+  </div>
+</div>
+
+<style>
+  .code-block-wrapper {
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  }
+
+  .code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+  }
+
+  .code-block-filename {
+    font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+    font-size: 0.875rem;
+    color: #e2e8f0;
+    font-weight: 500;
+  }
+
+  .code-block-language {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .code-block {
+    position: relative;
+    background: #0f172a;
+  }
+
+  pre {
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  code {
+    display: block;
+    color: #e2e8f0;
+  }
+
+  .code-line {
+    display: flex;
+    min-height: 1.7em;
+  }
+
+  .code-line.highlighted {
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 3px solid #3b82f6;
+    margin-left: -0.5rem;
+    padding-left: calc(0.5rem - 3px);
+  }
+
+  .line-number {
+    display: inline-block;
+    width: 3rem;
+    text-align: right;
+    margin-right: 1.5rem;
+    color: #64748b;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .line-content {
+    flex: 1;
+    white-space: pre;
+  }
+
+  .copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    color: #cbd5e1;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+  }
+
+  .code-block:hover .copy-button {
+    opacity: 1;
+  }
+
+  .copy-button:hover {
+    background: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+  }
+
+  .copy-button:active {
+    transform: scale(0.95);
+  }
+
+  .copy-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Syntax highlighting colors - basic dark theme */
+  :global(.code-block .token.comment),
+  :global(.code-block .token.prolog),
+  :global(.code-block .token.doctype),
+  :global(.code-block .token.cdata) {
+    color: #64748b;
+  }
+
+  :global(.code-block .token.punctuation) {
+    color: #cbd5e1;
+  }
+
+  :global(.code-block .token.property),
+  :global(.code-block .token.tag),
+  :global(.code-block .token.boolean),
+  :global(.code-block .token.number),
+  :global(.code-block .token.constant),
+  :global(.code-block .token.symbol),
+  :global(.code-block .token.deleted) {
+    color: #f87171;
+  }
+
+  :global(.code-block .token.selector),
+  :global(.code-block .token.attr-name),
+  :global(.code-block .token.string),
+  :global(.code-block .token.char),
+  :global(.code-block .token.builtin),
+  :global(.code-block .token.inserted) {
+    color: #a5f3fc;
+  }
+
+  :global(.code-block .token.operator),
+  :global(.code-block .token.entity),
+  :global(.code-block .token.url) {
+    color: #fbbf24;
+  }
+
+  :global(.code-block .token.atrule),
+  :global(.code-block .token.attr-value),
+  :global(.code-block .token.keyword) {
+    color: #c084fc;
+  }
+
+  :global(.code-block .token.function),
+  :global(.code-block .token.class-name) {
+    color: #60a5fa;
+  }
+
+  :global(.code-block .token.regex),
+  :global(.code-block .token.important),
+  :global(.code-block .token.variable) {
+    color: #fb923c;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    pre {
+      padding: 0.75rem;
+      font-size: 0.8125rem;
+    }
+
+    .line-number {
+      width: 2.5rem;
+      margin-right: 1rem;
+    }
+
+    .copy-button {
+      opacity: 1;
+      padding: 0.375rem 0.5rem;
+      font-size: 0.8125rem;
+    }
+
+    .copy-text {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Handle copy to clipboard functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyButtons = document.querySelectorAll('.copy-button');
+    
+    copyButtons.forEach((button) => {
+      button.addEventListener('click', async () => {
+        const codeBlock = button.closest('.code-block');
+        const codeContent = codeBlock?.querySelector('code');
+        
+        if (!codeContent) return;
+        
+        // Extract text from code lines
+        const lines = codeContent.querySelectorAll('.line-content');
+        const text = Array.from(lines)
+          .map((line) => line.textContent || '')
+          .join('\n');
+        
+        try {
+          await navigator.clipboard.writeText(text);
+          
+          // Visual feedback
+          const copyText = button.querySelector('.copy-text');
+          const originalText = copyText?.textContent;
+          
+          if (copyText) {
+            copyText.textContent = 'Copied!';
+            setTimeout(() => {
+              copyText.textContent = originalText || 'Copy';
+            }, 2000);
+          }
+        } catch (err) {
+          console.error('Failed to copy code:', err);
+        }
+      });
+    });
+  });
+</script>
