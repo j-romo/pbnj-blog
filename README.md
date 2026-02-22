@@ -17,7 +17,7 @@ This project uses **two separate applications** that work together:
 - **URL:** `https://peanutbutterandjelly.ai`
 
 ### 2. CMS Application (Sanity Studio)
-- **Framework:** Sanity Studio v4.5.0 (React-based admin interface)
+- **Framework:** Sanity Studio v5.11.0 (React-based admin interface)
 - **Hosting:** Sanity Cloud
 - **Deployment:** Manual via Sanity CLI (`npx sanity deploy`)
 - **Purpose:** Content management and editing interface
