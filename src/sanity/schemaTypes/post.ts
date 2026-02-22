@@ -34,6 +34,22 @@ export const postType = defineType({
       options: {
         hotspot: true, // Enable cropping in Sanity Studio
       },
+      fields: [
+        {
+          name: 'size',
+          title: 'Size',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Small (40%)', value: 'small' },
+              { title: 'Medium (70%)', value: 'medium' },
+              { title: 'Large (100%)', value: 'large' },
+              { title: 'Full Width', value: 'full' },
+            ],
+          },
+          initialValue: 'large',
+        },
+      ],
     }),
     defineField({
       name: "categories",
@@ -52,7 +68,49 @@ export const postType = defineType({
       type: 'array',
       of: [
         { type: 'block' },      // for rich text
-        { type: 'image', options: { hotspot: true } }, // for images
+        { 
+          type: 'image', 
+          options: { hotspot: true },
+          fields: [
+            {
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Important for accessibility and SEO',
+            },
+            {
+              name: 'caption',
+              title: 'Caption',
+              type: 'string',
+            },
+            {
+              name: 'size',
+              title: 'Size',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Small (40%)', value: 'small' },
+                  { title: 'Medium (70%)', value: 'medium' },
+                  { title: 'Large (100%)', value: 'large' },
+                ],
+              },
+              initialValue: 'medium',
+            },
+            {
+              name: 'alignment',
+              title: 'Alignment',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Left', value: 'left' },
+                  { title: 'Center', value: 'center' },
+                  { title: 'Right', value: 'right' },
+                ],
+              },
+              initialValue: 'center',
+            },
+          ],
+        },
         { type: 'table' },      // for tables
         { type: 'divider' },    // for dividers
         { type: 'accordion' },  // for accordions

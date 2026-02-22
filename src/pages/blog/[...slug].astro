@@ -13,6 +13,7 @@ interface SanityPost {
   title: string;
   body: any[];
   heroImage?: string;
+  heroImageSize?: string;
   _createdAt: string;
   _updatedAt: string;
 }
@@ -33,6 +34,7 @@ export async function getStaticPaths() {
         }
       },
       "heroImage": heroImage.asset->url,
+      "heroImageSize": heroImage.size,
       _createdAt,
       _updatedAt
     }
@@ -58,7 +60,6 @@ const post: SanityPost = Astro.props;
         margin: 0;
       }
       .hero-image {
-        max-width: 720px; /* Set a maximum width for the image */
         margin: 0 auto; /* Center the image horizontally */
         padding: 1rem 0; /* Add spacing above and below */
       }
@@ -67,6 +68,19 @@ const post: SanityPost = Astro.props;
         height: auto;
         border-radius: 8px; /* Optional: Add rounded corners */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+      }
+      /* Hero image sizes */
+      .hero-small {
+        max-width: 40%;
+      }
+      .hero-medium {
+        max-width: 70%;
+      }
+      .hero-large {
+        max-width: 100%;
+      }
+      .hero-full {
+        max-width: 100%;
       }
       .prose {
         width: 720px;
@@ -119,7 +133,7 @@ const post: SanityPost = Astro.props;
       <article>
         <!-- Hero Image -->
         {post.heroImage && (
-          <div class="hero-image">
+          <div class={`hero-image hero-${post.heroImageSize || 'large'}`}>
             <img 
               width={1020} 
               height={510} 
