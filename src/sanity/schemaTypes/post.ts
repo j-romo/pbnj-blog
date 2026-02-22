@@ -115,6 +115,7 @@ export const postType = defineType({
         { type: 'divider' },    // for dividers
         { type: 'accordion' },  // for accordions
         { type: 'codeBlock' },  // for code blocks
+        { type: 'chatConversation' },  // for chat conversations
       ],
     }),
   ],
