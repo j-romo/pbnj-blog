@@ -1,0 +1,100 @@
+---
+// ./src/components/PortableTextTable.astro
+const { node } = Astro.props;
+
+if (!node || !node.rows) {
+  console.error("PortableTextTable missing rows:", Astro.props);
+  return null;
+}
+
+const { rows, caption, hasHeader = true } = node;
+
+// Split into header and body rows
+const headerRow = hasHeader && rows.length > 0 ? rows[0] : null;
+const bodyRows = hasHeader ? rows.slice(1) : rows;
+---
+
+<figure class="table-wrapper">
+  <div class="table-container">
+    <table>
+      {headerRow && (
+        <thead>
+          <tr>
+            {headerRow.cells?.map((cell: string) => (
+              <th>{cell}</th>
+            ))}
+          </tr>
+        </thead>
+      )}
+      <tbody>
+        {bodyRows.map((row: any) => (
+          <tr>
+            {row.cells?.map((cell: string) => (
+              <td>{cell}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .table-wrapper {
+    margin: 2rem 0;
+    overflow-x: auto;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 0.95rem;
+  }
+
+  thead th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid #ddd;
+  }
+
+  tbody td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  tbody tr:hover {
+    background-color: #fafafa;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 1px solid #ddd;
+  }
+
+  figcaption {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+    text-align: center;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    table {
+      font-size: 0.85rem;
+    }
+
+    thead th,
+    tbody td {
+      padding: 0.5rem 0.75rem;
+    }
+  }
+</style>

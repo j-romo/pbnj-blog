@@ -120,5 +120,9 @@ export const blockContentType = defineType({
     defineArrayMember({
       type: "figure",
     }),
+    // Table support
+    defineArrayMember({
+      type: "table",
+    }),
   ],
 });
