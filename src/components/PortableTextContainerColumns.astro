@@ -1,0 +1,94 @@
+---
+const { node } = Astro.props;
+
+if (!node) {
+  console.error("PortableTextContainerColumns missing node:", Astro.props);
+  return null;
+}
+
+const { leftText, rightText, label } = node;
+
+if (!leftText || !rightText) {
+  console.error("PortableTextContainerColumns missing text columns:", node);
+  return null;
+}
+
+// Preserve line breaks by converting them to <br> tags
+const formatText = (text: string) => {
+  return text.replace(/\n/g, '<br>');
+};
+---
+
+<div class="container-columns-wrapper">
+  {label && <div class="container-columns-label">{label}</div>}
+  <div class="container-columns-container">
+    <div class="column column-left">
+      <p set:html={formatText(leftText)} />
+    </div>
+    <div class="column column-right">
+      <p set:html={formatText(rightText)} />
+    </div>
+  </div>
+</div>
+
+<style>
+  .container-columns-wrapper {
+    margin: 2rem 0;
+    width: 100%;
+  }
+
+  .container-columns-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(var(--gray-dark));
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .container-columns-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 1.5rem;
+    background-color: rgb(var(--gray-light));
+    border-radius: 8px;
+    border: 1px solid rgb(var(--gray));
+  }
+
+  .column {
+    min-width: 0; /* Prevents grid blowout with long words */
+  }
+
+  .column p {
+    margin: 0;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Preserves formatting */
+    word-wrap: break-word;
+  }
+
+  /* Mobile: Stack columns vertically */
+  @media (max-width: 768px) {
+    .container-columns-container {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .column-right {
+      border-top: 1px solid rgb(var(--gray));
+      padding-top: 1.5rem;
+    }
+  }
+
+  /* Optional: Add visual separator on desktop */
+  @media (min-width: 769px) {
+    .column-left {
+      border-right: 1px solid rgb(var(--gray));
+      padding-right: 1rem;
+    }
+
+    .column-right {
+      padding-left: 1rem;
+    }
+  }
+</style>

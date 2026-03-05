@@ -1,0 +1,73 @@
+---
+const { node } = Astro.props;
+
+if (!node) {
+  console.error("PortableTextNewspaperColumns missing node:", Astro.props);
+  return null;
+}
+
+const { leftText, rightText, label, leftAlign = 'left', rightAlign = 'left' } = node;
+
+if (!leftText || !rightText) {
+  console.error("PortableTextNewspaperColumns missing text columns:", node);
+  return null;
+}
+
+// Preserve line breaks by converting them to <br> tags
+const formatText = (text: string) => {
+  return text.replace(/\n/g, '<br>');
+};
+---
+
+<div class="newspaper-columns-wrapper">
+  {label && <div class="newspaper-columns-label">{label}</div>}
+  <div class="newspaper-columns-container">
+    <div class="newspaper-column newspaper-column-left" style={`text-align: ${leftAlign}`}>
+      <p set:html={formatText(leftText)} />
+    </div>
+    <div class="newspaper-column newspaper-column-right" style={`text-align: ${rightAlign}`}>
+      <p set:html={formatText(rightText)} />
+    </div>
+  </div>
+</div>
+
+<style>
+  .newspaper-columns-wrapper {
+    margin: 2rem 0;
+    width: 100%;
+  }
+
+  .newspaper-columns-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(var(--gray-dark));
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .newspaper-columns-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem; /* Wider gap for visual separation without borders */
+  }
+
+  .newspaper-column {
+    min-width: 0;
+  }
+
+  .newspaper-column p {
+    margin: 0;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  /* Mobile: Stack columns vertically */
+  @media (max-width: 768px) {
+    .newspaper-columns-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

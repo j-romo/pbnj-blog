@@ -10,7 +10,9 @@ import divider from "./objects/divider";
 import accordion from "./objects/accordion";
 import codeBlock from "./objects/codeBlock";
 import chatConversation from "./objects/chatConversation";
+import containerColumns from "./objects/containerColumns";
+import newspaperColumns from "./objects/newspaperColumns";
 
 export const schema = {
-  types: [authorType, blockContentType, categoryType, postType, figure, table, divider, accordion, codeBlock, chatConversation],
+  types: [authorType, blockContentType, categoryType, postType, figure, table, divider, accordion, codeBlock, chatConversation, containerColumns, newspaperColumns],
 };
