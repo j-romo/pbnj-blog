@@ -7,7 +7,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, subtitle, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
 <html lang="en">
@@ -43,6 +43,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+			}
+			.subtitle {
+				font-size: 1.8rem;
+				color: rgb(var(--gray-dark));
+				font-weight: 600;
+				margin: -0.3em 0 1em 0;
+				line-height: 1.4;
 			}
 			.date {
 				margin-bottom: 0.5em;
