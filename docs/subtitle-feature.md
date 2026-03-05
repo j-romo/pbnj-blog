@@ -24,11 +24,19 @@ When creating or editing a post in Sanity Studio, you'll find a new "Subtitle" f
 
 ## Styling
 
+### Individual Blog Post Pages
 The subtitle is styled with:
 - Font size: 1.8rem (smaller than the main title's 2.5rem)
 - Color: Gray-dark (darker gray for better readability)
 - Font weight: 600 (semi-bold)
 - Spacing: Positioned close to the title with proper margin
+
+### Blog Listing Cards
+The subtitle on the blog index page cards is styled with:
+- Font size: 1.1rem (smaller and more compact for card views)
+- Color: Gray (medium gray)
+- Font weight: 600 (semi-bold)
+- Spacing: Positioned between title and date
 
 ## Example Use Cases
 

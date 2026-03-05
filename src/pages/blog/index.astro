@@ -36,6 +36,7 @@ const posts = await sanityClient.fetch(`
   *[_type == "post"] | order(_createdAt desc) {
     _id,
     title,
+    subtitle,
     "slug": slug.current,
 	"heroImage": heroImage.asset->url + "?w=720&h=360&fit=crop&auto=format",
     _createdAt
@@ -100,6 +101,14 @@ const posts = await sanityClient.fetch(`
 				line-height: 1;
 				margin-bottom: 0.5rem;
 			}
+			.subtitle {
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 1.1rem;
+				font-weight: 600;
+				line-height: 1.3;
+				margin-bottom: 0.5rem;
+			}
 			.date {
 				margin: 0;
 				color: rgb(var(--gray));
@@ -147,6 +156,7 @@ const posts = await sanityClient.fetch(`
                                         <img width={720} height={360} src={post.heroImage} alt={post.title} />
                                     )}
                                     <h4 class="title">{post.title}</h4>
+                                    {post.subtitle && <p class="subtitle">{post.subtitle}</p>}
                                     <p class="date">
                                         <FormattedDate date={new Date(post._createdAt)} />
                                     </p>
