@@ -11,6 +11,7 @@ import PortableText from '../../components/PortableText.astro';
 interface SanityPost {
   slug: string;
   title: string;
+  subtitle?: string;
   body: any[];
   heroImage?: string;
   heroImageSize?: string;
@@ -23,6 +24,7 @@ export async function getStaticPaths() {
     *[_type == "post"] {
       "slug": slug.current,
       title,
+      subtitle,
       body[] {
         ...,
         _type == "image" => {
@@ -99,6 +101,13 @@ const post: SanityPost = Astro.props;
         margin: 0 0 0.5em 0;
         font-size: 2.5rem;
       }
+      .subtitle {
+        font-size: 1.8rem;
+        color: rgb(var(--gray-dark));
+        font-weight: 600;
+        margin: -0.3em 0 1em 0;
+        line-height: 1.4;
+      }
       .date {
         margin-bottom: 0.5rem;
         color: rgb(var(--gray));
@@ -157,6 +166,7 @@ const post: SanityPost = Astro.props;
               )}
             </div>
             <h1>{post.title}</h1>
+            {post.subtitle && <p class="subtitle">{post.subtitle}</p>}
           </div>
 
           <!-- Post Body -->
