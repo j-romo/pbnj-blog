@@ -122,6 +122,8 @@ export const postType = defineType({
         { type: 'accordion' },  // for accordions
         { type: 'codeBlock' },  // for code blocks
         { type: 'chatConversation' },  // for chat conversations
+        { type: 'containerColumns' },  // for two-column text comparisons (boxed)
+        { type: 'newspaperColumns' },  // for newspaper-style columns (plain)
       ],
     }),
   ],
