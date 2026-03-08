@@ -18,7 +18,7 @@ export default defineType({
               name: 'cells',
               title: 'Row Cells',
               type: 'array',
-              of: [{ type: 'string' }],
+              of: [{ type: 'text' }],
             },
           ],
           preview: {
