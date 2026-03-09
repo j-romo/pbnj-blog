@@ -124,6 +124,7 @@ export const postType = defineType({
         { type: 'chatConversation' },  // for chat conversations
         { type: 'containerColumns' },  // for two-column text comparisons (boxed)
         { type: 'newspaperColumns' },  // for newspaper-style columns (plain)
+        { type: 'handwrittenNote' },  // for handwritten notes
       ],
     }),
   ],
