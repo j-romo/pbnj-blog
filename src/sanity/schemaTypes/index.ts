@@ -12,7 +12,8 @@ import codeBlock from "./objects/codeBlock";
 import chatConversation from "./objects/chatConversation";
 import containerColumns from "./objects/containerColumns";
 import newspaperColumns from "./objects/newspaperColumns";
+import handwrittenNote from "./objects/handwrittenNote";
 
 export const schema = {
-  types: [authorType, blockContentType, categoryType, postType, figure, table, divider, accordion, codeBlock, chatConversation, containerColumns, newspaperColumns],
+  types: [authorType, blockContentType, categoryType, postType, figure, table, divider, accordion, codeBlock, chatConversation, containerColumns, newspaperColumns, handwrittenNote],
 };
