@@ -100,8 +100,7 @@ All commands are run from the root of the project:
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
 | `npx sanity dev`          | Start Sanity Studio locally at `localhost:3333` |
-| `npx sanity build`        | Build Sanity Studio for production              |
-| `npx sanity deploy dist`  | Deploy Studio to Sanity Cloud                   |
+| `npx sanity deploy`       | Build and deploy Studio to Sanity Cloud         |
 | `npx sanity login`        | Log in to Sanity CLI                            |
 
 ### Development Workflow
@@ -124,9 +123,8 @@ git push origin main
 
 # GitHub Actions automatically deploys Astro site ✅
 
-# 2. Deploy Sanity Studio separately (only if schema changed, adding new components like table, image)
-npx sanity build
-npx sanity deploy dist
+# 2. Deploy Sanity Studio separately (if schema/Studio changed)
+npx sanity deploy
 ```
 
 ## 🎨 Custom Components
