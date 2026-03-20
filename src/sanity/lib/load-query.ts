@@ -4,7 +4,12 @@ import { sanityClient } from '../../lib/sanityClient';
 
 const visualEditingEnabled =
   import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
-const token = import.meta.env.SANITY_API_READ_TOKEN;
+
+// Use the perspective from env, default to 'published'
+const perspective = import.meta.env.PUBLIC_SANITY_PERSPECTIVE || "published";
+
+// Use the preview token for drafts, fallback to read token
+const token = import.meta.env.SANITY_DEV_PREVIEW_TOKEN || import.meta.env.SANITY_API_READ_TOKEN;
 
 export async function loadQuery<QueryResponse>({
   query,
@@ -14,24 +19,22 @@ export async function loadQuery<QueryResponse>({
   params?: QueryParams;
 }) {
 
-    if (visualEditingEnabled && !token) {
+    if (perspective === "previewDrafts" && !token) {
         throw new Error(
-          "The `SANITY_API_READ_TOKEN` environment variable is required during Visual Editing.",
+          "The `SANITY_DEV_PREVIEW_TOKEN` or `SANITY_API_READ_TOKEN` environment variable is required for preview mode.",
         );
       }
-  
-    const perspective = visualEditingEnabled ? "drafts" : "published";    
     
     const { result, resultSourceMap } = await sanityClient.fetch<QueryResponse>(
     query,
     params ?? {},
     {
         filterResponse: false,
-        perspective,
+        perspective: perspective as "published" | "previewDrafts",
         resultSourceMap: visualEditingEnabled ? "withKeyArraySelector" : false,
         stega: visualEditingEnabled,
-        ...(visualEditingEnabled ? { token } : {}),
-        useCdn: !visualEditingEnabled,
+        ...(token ? { token } : {}),
+        useCdn: perspective === "published",
       },
   );
 

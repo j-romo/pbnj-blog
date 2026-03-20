@@ -5,10 +5,12 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { sanityClient } from '../../lib/sanityClient';
+import { loadQuery } from '../../sanity/lib/load-query';
 import PortableText from '../../components/PortableText.astro';
 
 // Define the post type for better TypeScript support
 interface SanityPost {
+  _id: string;
   slug: string;
   title: string;
   subtitle?: string;
@@ -19,28 +21,37 @@ interface SanityPost {
   _updatedAt: string;
 }
 
+// Check configuration
+const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
+const perspective = import.meta.env.PUBLIC_SANITY_PERSPECTIVE || "published";
+const showDrafts = perspective === "previewDrafts";
+
 export async function getStaticPaths() {
-  const posts: SanityPost[] = await sanityClient.fetch(`
-    *[_type == "post"] {
-      "slug": slug.current,
-      title,
-      subtitle,
-      body[] {
+  // Fetch all published posts for static builds (production)
+  // Include isLive: false posts so they're accessible via direct URL
+  const allPostsQuery = `*[_type == "post" && defined(slug.current)] {
+    _id,
+    "slug": slug.current,
+    title,
+    subtitle,
+    body[] {
+      ...,
+      _type == "image" => {
         ...,
-        _type == "image" => {
-          ...,
-          "asset": asset->{
-            _id,
-            url
-          }
+        "asset": asset->{
+          _id,
+          url
         }
-      },
-      "heroImage": heroImage.asset->url,
-      "heroImageSize": heroImage.size,
-      _createdAt,
-      _updatedAt
-    }
-  `);
+      }
+    },
+    "heroImage": heroImage.asset->url,
+    "heroImageSize": heroImage.size,
+    _createdAt,
+    _updatedAt,
+    isLive
+  }`;
+  
+  const posts: SanityPost[] = await sanityClient.fetch(allPostsQuery);
   
   return posts.map((post) => ({
     params: { slug: post.slug },
@@ -181,5 +192,15 @@ const post: SanityPost = Astro.props;
       </article>
     </main>
     <Footer />
+    
+    <!-- Visual Editing Script for Sanity Presentation Tool -->
+    {visualEditingEnabled && (
+      <script type="module">
+        import { enableVisualEditing } from '@sanity/visual-editing';
+        enableVisualEditing({
+          zIndex: 999999,
+        });
+      </script>
+    )}
   </body>
 </html>
