@@ -6,42 +6,29 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { sanityClient } from '../../lib/sanityClient';
+import { loadQuery } from '../../sanity/lib/load-query';
 
-// const posts = (await getCollection('blog')).sort(
-// 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-// );
-
-// interface SanityPost {
-//     _id: string;
-//     title: string;
-//     slug: {
-//         current: string;
-//     };
-//     heroImage?: string;
-//     pubDate: string;
-// }
-
-// const posts: SanityPost[] = await sanityClient.fetch(`
-//     *[_type == "post"] | order(pubDate desc) {
-//         _id,
-//         title,
-//         slug,
-//         heroImage,
-//         pubDate
-//     }
-// `);
+// Check if we should show drafts (preview mode)
+const perspective = import.meta.env.PUBLIC_SANITY_PERSPECTIVE || "published";
+const showDrafts = perspective === "previewDrafts";
 
 // Fetch posts with proper fields including heroImage
-const posts = await sanityClient.fetch(`
-  *[_type == "post"] | order(_createdAt desc) {
+// Filter by isLive: true for production, show all in preview mode
+const query = `
+  *[_type == "post" && (isLive == true || !defined(isLive))] | order(_createdAt desc) {
     _id,
     title,
     subtitle,
     "slug": slug.current,
 	"heroImage": heroImage.asset->url + "?w=720&h=360&fit=crop&auto=format",
-    _createdAt
+    _createdAt,
+    isLive
   }
-`);
+`;
+
+const posts = showDrafts 
+  ? (await loadQuery({ query })).data
+  : await sanityClient.fetch(query);
 ---
 
 <!doctype html>

@@ -26,9 +26,19 @@ export default defineConfig({
               useCdn: true, 
               apiVersion: "2024-01-01", 
               studioBasePath: '/studio',
+              studioUrl: 'http://localhost:3333',
             })
         ] : []),
         react(),
     ],
     output: 'static',
+    vite: {
+        server: {
+            // Allow Sanity Studio to connect for live preview
+            cors: {
+                origin: ['http://localhost:3333', 'https://peanutbutternjellyai.sanity.studio'],
+                credentials: true,
+            },
+        },
+    },
 });

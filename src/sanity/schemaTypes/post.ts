@@ -69,6 +69,14 @@ export const postType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'isLive',
+      title: 'Is Live',
+      type: 'boolean',
+      description: 'Toggle to show/hide this post on the public blog. Keeps it accessible via direct URL.',
+      initialValue: true,
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'body',
       title: 'Body',
       type: 'array',
